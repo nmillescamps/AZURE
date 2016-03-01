@@ -1,3 +1,3 @@
 #!/bin/bash
 
-touch /etc/test.txt
+sudo touch /etc/test.txt
