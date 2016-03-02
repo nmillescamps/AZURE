@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Copy informations in /etc/azure.txt 
+#Copy informations in $FILE_PATH 
 
 while getopts "c:f:l:e:p:r:j:o:s:" opt; do
   echo "Option $opt set with value $OPTARG"
@@ -28,8 +28,9 @@ while getopts "c:f:l:e:p:r:j:o:s:" opt; do
       ;;
   esac
 done
-sudo touch /etc/azure.txt
 FILE_PATH=/etc/azure.txt
+sudo touch $FILE_PATH
+
 echo "COMPANY:"$COMPANY >>$FILE_PATH
 echo "FIRSTNAME:"$FIRSTNAME >>$FILE_PATH
 echo "LASTNAME:"$LASTNAME >>$FILE_PATH
