@@ -191,7 +191,7 @@
                         },
                         "defaultValue": {
                             "name": "MailgateVnet",
-                            "addressPrefixSize": "172.16.0.0/16"
+                            "addressPrefixSize": "/16"
                         },
                         "constraints": {
                             "minAddressPrefixSize": "/29"
@@ -201,7 +201,7 @@
                                 "label": "Search head subnet",
                                 "defaultValue": {
                                     "name": "shsubnet",
-                                    "addressPrefixSize": "172.16.1.0/24"
+                                    "addressPrefixSize": "/24"
                                 },
                                 "constraints": {
                                     "minAddressPrefixSize": "/29",
@@ -213,7 +213,7 @@
                                 "label": "Index subnet",
                                 "defaultValue": {
                                     "name": "idxsubnet",
-                                    "addressPrefixSize": "172.16.2.0/24"
+                                    "addressPrefixSize": "/24"
                                 },
                                 "constraints": {
                                     "minAddressPrefixSize": "/29",
