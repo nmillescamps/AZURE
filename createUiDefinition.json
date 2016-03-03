@@ -130,7 +130,7 @@
           {
             "name": "vmSize",
             "type": "Microsoft.Compute.SizeSelector",
-            "label": "Virtual machine size size",
+            "label": "Virtual machine size",
             "toolTip": "Size of the virtual machine",
             "defaultValue": "Standard_D2",
             "recommendedSizes": [
@@ -139,9 +139,8 @@
 			  "Standard_DS13"
             ],
             "constraints": {
-              "allowedSizes": [],
-              "excludedSizes": [],
-              "allowedValues": [
+				"required": true,
+              "allowedSizes": [
                 "Standard_A0",
                 "Standard_A1",
                 "Standard_A2",
