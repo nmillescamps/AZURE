@@ -80,6 +80,6 @@ echo $DIGIT1$DIGIT2 >$FILE_LICENSE
 
 # only for mailgate image 
 ln -s /usr/sbin/sendmail.postfix /usr/sbin/sendmail
-cat /etc/azure.txt | mail -s "Azure MarketPlace - New Mailgate Virtual Machine" nathan.millescamps@gmail.com -c mailgate.azure.subscription@axway.com
+cat /etc/azure.txt | mail -s "Azure MarketPlace - New Mailgate Virtual Machine" mailgate.azure.subscription@axway.com
 
 
