@@ -56,11 +56,11 @@
       "type": "string"
     },
     "fqdn": {
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[2015-06-15]).dnsSettings.fqdn]",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions["2015-06-15"]).dnsSettings.fqdn]",
       "type": "string"
     },
     "ipaddress": {
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions[2015-06-15]).ipAddress]",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName')),providers('Microsoft.Network', 'publicIPAddresses').apiVersions["2015-06-15"]).ipAddress]",
       "type": "string"
     }
   }
