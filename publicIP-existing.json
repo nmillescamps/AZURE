@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "metadata": {
+        "description": "Location"
+      }
+    },
+    "publicIPAddressResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Resource Group"
+      }
+    },
+    "publicIPAddressName": {
+      "type": "string",
+      "metadata": {
+        "description": "Public IP Address Name"
+      }
+    },
+    "publicIPAddressType": {
+      "type": "string",
+      "metadata": {
+        "description": "Public IP Address Type (e.g. Static or Dynamic)"
+      }
+    },
+    "publicip_DNS": {
+      "type": "string",
+      "metadata": {
+        "description": "Public IP DNS prefix (e.g. [dnsName].region.cloudapp.azure.com)"
+      }
+    }
+  },
+  "variables": {
+
+
+    "publicIPID": "[resourceId(parameters('publicIPAddressResourceGroup'),concat('Microsoft.Network','/','publicIPAddresses'),parameters('publicIPAddressName'))]",
+    "fqdn": "[reference(resourceId(parameters('publicIPAddressResourceGroup'), 'Microsoft.Network/publicIPAddresses/', parameters('publicIPAddressName')), '2015-06-15').dnsSettings.fqdn]",
+    "ipaddress": "[reference(resourceId(parameters('publicIPAddressResourceGroup'), 'Microsoft.Network/publicIPAddresses/', parameters('publicIPAddressName')), '2015-06-15').ipAddress]"
+  },
+  "resources": [ ],
+  "outputs": {
+    "publicIPID": {
+      "value": "[variables('publicIPID')]",
+      "type": "string"
+    },
+    "fqdn": {
+
+      "value": "[variables('fqdn')]",
+      "type": "string"
+    },
+    "ipaddress": {
+      "value": "[reference(variables('publicIPID'), variables('apiVersions').network.publicIPAddresses).ipAddress]",
+      "type": "string"
+    }
+  }
+}
