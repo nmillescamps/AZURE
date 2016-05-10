@@ -34,7 +34,7 @@
     }
   },
   "variables": {
-    "apiVersions": "2015-06-15",
+    "apiVersions": "2016-03-30",
     "publicIPID": "[resourceId(parameters('publicIPAddressResourceGroup'),concat('Microsoft.Network','/','publicIPAddresses'),parameters('publicIPAddressName'))]"
   },
   "resources": [ ],
