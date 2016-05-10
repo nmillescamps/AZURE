@@ -43,13 +43,16 @@
       "value": "[variables('publicIPID')]",
       "type": "string"
     },
+    
+     "ipaddress": {
+      "value": "[reference(variables('publicIPID'), variables('apiVersions').network.publicIPAddresses).ipAddress]",
+      "type": "string"
+    },
+    
     "fqdn": {
        "value": "[reference(variables('publicIPID'),variables('apiVersions').network.publicIPAddresses).dnsSettings.fqdn]",
       "type": "string"
-    },
-    "ipaddress": {
-      "value": "[reference(variables('publicIPID'), variables('apiVersions').network.publicIPAddresses).ipAddress]",
-      "type": "string"
     }
+   
   }
 }
