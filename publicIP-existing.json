@@ -37,7 +37,6 @@
 
 
     "publicIPID": "[resourceId(parameters('publicIPAddressResourceGroup'),concat('Microsoft.Network','/','publicIPAddresses'),parameters('publicIPAddressName'))]",
-    "fqdn": "[reference(resourceId(parameters('publicIPAddressResourceGroup'), 'Microsoft.Network/publicIPAddresses/', parameters('publicIPAddressName')), '2015-06-15').dnsSettings.fqdn]",
     "ipaddress": "[reference(resourceId(parameters('publicIPAddressResourceGroup'), 'Microsoft.Network/publicIPAddresses/', parameters('publicIPAddressName')), '2015-06-15').ipAddress]"
   },
   "resources": [ ],
@@ -48,7 +47,7 @@
     },
     "fqdn": {
 
-      "value": "[variables('fqdn')]",
+      "value": "[reference(resourceId(parameters('publicIPAddressResourceGroup'), 'Microsoft.Network/publicIPAddresses/', parameters('publicIPAddressName')), '2015-06-15').dnsSettings.fqdn]",
       "type": "string"
     },
     "ipaddress": {
