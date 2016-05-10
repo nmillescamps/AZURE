@@ -1,0 +1,965 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+
+  "parameters": {
+    "location": {
+      "type": "string",
+      "metadata": {
+        "Description": "Datacenter Location"
+      }
+    },
+    "artifactsBaseUrl": {
+      "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/nmillescamps/AZURE/master",
+      "metadata": {
+        "description": "Base URL of the solution template gallery package",
+        "artifactsBaseUrl": ""
+      }
+    },
+    "offer": {
+      "type": "string",
+      "defaultValue": "",
+      "allowedValues": [
+        "axway-mailgate-secure-collaboration-standard",
+        "axway-mailgate-secure-collaboration-advanced",
+        "axway-mailgate-secure-collaboration-premium"
+      ],
+      "metadata": {
+        "Description": "Choice Offer"
+      }
+    },
+    "sku": {
+      "type": "string",
+      "defaultValue": "",
+      "allowedValues": [
+        "ms-saasax-mg-st-1",
+        "ms-saasax-mg-st-2",
+        "ms-saasax-mg-st-3",
+        "ms-saasax-mg-st-4",
+        "ms-saasax-mg-st-5",
+        "ms-saasax-mg-st-6",
+        "ms-saasax-mg-st-7",
+        "ms-saasax-mg-ad-1",
+        "ms-saasax-mg-ad-2",
+        "ms-saasax-mg-ad-3",
+        "ms-saasax-mg-ad-4",
+        "ms-saasax-mg-ad-5",
+        "ms-saasax-mg-ad-6",
+        "ms-saasax-mg-ad-7",
+        "ms-saasax-mg-pr-1",
+        "ms-saasax-mg-pr-2",
+        "ms-saasax-mg-pr-3",
+        "ms-saasax-mg-pr-4",
+        "ms-saasax-mg-pr-5",
+        "ms-saasax-mg-pr-6",
+        "ms-saasax-mg-pr-7"
+      ],
+      "metadata": {
+        "Description": "Choice sku"
+      }
+    },
+    "vmSize": {
+      "type": "string",
+      "defaultValue": "Standard_A3",
+      "metadata": {
+        "Description": "VM Size"
+      }
+    },
+    "vnetNewOrExisting": {
+      "type": "string",
+      "defaultValue": "new",
+      "allowedValues": [
+        "new",
+        "existing"
+      ],
+      "metadata": {
+        "description": "Parameter that specifies if an new or an existing virtual network should be used for deploying the virtual machine"
+      }
+    },
+    "virtualNetworkExistingRGName": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "Virtual Network Resource Group for cases when the VM is deployed into an existing VNet"
+      }
+    },
+    "vnet_name": {
+      "type": "string",
+      "defaultValue": "vnet-mailgate",
+      "metadata": {
+        "description": "Virtual Network name"
+      }
+    },
+    "vnet_AddressSpace": {
+      "type": "string",
+      "defaultValue": "172.16.0.0/16",
+      "metadata": {
+        "Description": "Virtual Network Address Space (i.e CIDR)"
+      }
+    },
+    "subnet1Name": {
+      "type": "string",
+      "defaultValue": "subnet1",
+      "metadata": {
+        "description": "Virtual machines will be deployed into this subnet within the Virtual Network"
+      }
+    },
+    "subnet_1_AddressSpace": {
+      "type": "string",
+      "defaultValue": "172.16.1.0/24",
+      "metadata": {
+        "Description": "Subnet1 Address Space"
+      }
+    },
+    "subnet1StartAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "Subnet 1 Starting IP Address"
+      }
+    },
+    "subnetAdminName": {
+      "type": "string",
+      "defaultValue": "subnetadmin",
+      "metadata": {
+        "description": "Virtual machines will be deployed into this subnet within the Virtual Network"
+      }
+    },
+    "subnet_admin_AddressSpace": {
+      "type": "string",
+      "defaultValue": "172.16.2.0/24",
+      "metadata": {
+        "Description": "Subnet Admin Address Space"
+      }
+    },
+    "subnet2StartAddress": {
+      "type": "string",
+      "metadata": {
+        "description": "Subnet 1 Starting IP Address"
+      }
+    },
+    "networkSecurityGroupName": {
+      "type": "string",
+      "defaultValue": "NSG-subnet1",
+      "metadata": {
+        "description": "Name for the NSG used to allow remote access subnet1."
+      }
+    },
+    "networkSecurityGroupName_admin": {
+      "type": "string",
+      "defaultValue": "NSG-subnetadmin",
+      "metadata": {
+        "description": "Name for the NSG used to allow remote access subnet admin."
+      }
+    },
+    "publicIPNewOrExisting": {
+      "type": "string",
+      "defaultValue": "new",
+      "allowedValues": [
+        "new",
+        "existing"
+      ],
+      "metadata": {
+        "description": "Parameter that specifies if an new or an existing public IP should be used for deploying the virtual machine"
+      }
+    },
+    "publicIPAddressResourceGroup": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().name]",
+      "metadata": {
+        "description": "Storage account resource group for future cases when existing public IP is used"
+      }
+    },
+    "publicIPAddressName": {
+      "type": "string",
+      "metadata": { "description": "Public IP Address name" }
+    },
+
+
+    "publicip_DNS": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "Description": "VM public IP DNS label"
+      }
+    },
+    "vm_name": {
+      "type": "string",
+      "defaultValue": "SRV",
+      "metadata": {
+        "Description": "VM Name"
+      }
+    },
+    "vm_admin": {
+      "type": "string",
+      "defaultValue": "azureuser",
+      "metadata": {
+        "Description": "VM admin username"
+      }
+    },
+    "vm_pwd": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "Description": "VM admin password"
+      }
+    },
+    "sshPublicKey": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "Description": "The OpenSSH public key can be generated with tools like ssh-keygen on Linux or OS X."
+      }
+    },
+    "authenticationType": {
+      "type": "string",
+      "defaultValue": "password",
+      "allowedValues": [
+        "password",
+        "sshPublicKey"
+      ],
+      "metadata": {
+        "description": "Authentication type for the virtual machine"
+      }
+    },
+    "company": {
+      "type": "string",
+      "defaultValue": "Axway",
+      "metadata": {
+        "description": "Company name"
+      }
+    },
+    "firstName": {
+      "type": "string",
+      "defaultValue": "Nathan",
+      "metadata": {
+        "description": "First name"
+      }
+    },
+    "lastName": {
+      "type": "string",
+      "defaultValue": "Millesscamps",
+      "metadata": {
+        "description": "Last name"
+      }
+    },
+    "email": {
+      "type": "string",
+      "defaultValue": "nmillescamps@axway.com",
+      "metadata": {
+        "description": "Email address"
+      }
+    },
+    "businessPhone": {
+      "type": "string",
+      "defaultValue": "0667074437",
+      "metadata": {
+        "description": "Business phone"
+      }
+    },
+    "jobRole": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Job role"
+      }
+    },
+    "jobFunction": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Job function"
+      }
+    }
+  },
+
+  "variables": {
+    "author": "support@axway.com",
+    "templateAPIVersion": "2015-01-01",
+    "storage_name": "[toLower(concat ('mgstorage',uniqueString(resourceGroup().id)))]",
+
+    "storage_type": "Standard_LRS",
+    "storage_uri": "[concat('https://',variables('storage_name'),'.blob.core.windows.net')]",
+
+    "baseUrl": "[concat(parameters('artifactsBaseUrl'),'/')]",
+    "templateUrlVnet": "[concat(variables('baseUrl'),'vnet-',parameters('vnetNewOrExisting'),'.json')]",
+    "templateUrlPublicIP": "[concat(variables('baseUrl'),'publicIP-',parameters('publicIPNewOrExisting'),'.json')]",
+    "scriptUrlInit": "[concat(variables('baseUrl'),'init.sh')]",
+
+    "publisher": "axway",
+
+    "networkSettings": {
+      "vnet_name": "[parameters('vnet_name')]",
+      "virtualNetworkExistingRGName": "[parameters('virtualNetworkExistingRGName')]",
+      "vnet_AddressSpace": "[parameters('vnet_AddressSpace')]",
+      "subnet": {
+        "sub1": {
+          "name": "[parameters('subnet1Name')]",
+          "prefix": "[parameters('subnet_1_AddressSpace')]",
+          "vnet": "[parameters('vnet_name')]"
+        },
+        "subadmin": {
+          "name": "[parameters('subnetAdminName')]",
+          "prefix": "[parameters('subnet_admin_AddressSpace')]",
+          "vnet": "[parameters('vnet_name')]"
+        }
+      }
+    },
+
+    "publicIP_Type": "Static",
+    "publicIPID": "[resourceId(parameters('publicIPAddressResourceGroup'), 'Microsoft.Network/publicIPAddresses', parameters('publicIPAddressName'))]",
+
+    "sshKeyPath": "[concat('/home/',parameters('vm_admin'),'/.ssh/authorized_keys')]",
+    "linuxConfiguration_sshPublicKey": {
+      "disablePasswordAuthentication": "true",
+      "ssh": {
+        "publicKeys": [
+          {
+            "path": "[variables('sshKeyPath')]",
+            "keyData": "[parameters('sshPublicKey')]"
+          }
+        ]
+      }
+    },
+    "linuxConfiguration_password": { },
+    "linuxConfiguration": "[variables(concat('linuxConfiguration_',parameters('authenticationType')))]",
+
+    "eth_name": "eth0",
+    "eth_name2": "eth1"
+  },
+
+  "resources": [
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storage_name')]",
+      "apiVersion": "2015-06-15",
+      "location": "[parameters('location')]",
+      "properties": {
+        "accountType": "[variables('storage_type')]"
+      }
+    },
+
+    {
+      "name": "virtual-network",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "[variables('templateAPIVersion')]",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('templateUrlVnet')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "networkSettings": {
+            "value": "[variables('networkSettings')]"
+          }
+        }
+      }
+    },
+
+    {
+      "apiVersion": "[variables('templateAPIVersion')]",
+      "type": "Microsoft.Resources/deployments",
+      "name": "publicIP",
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('templateUrlPublicIP')]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "publicIPAddressName": {
+            "value": "[parameters('publicIPAddressName')]"
+          },
+          "publicIPAddressType": {
+            "value": "[variables('publicIP_Type')]"
+          },
+          "publicip_DNS": {
+            "value": "[parameters('publicip_DNS')]"
+          },
+          "publicIPAddressResourceGroup": {
+            "value": "[parameters('publicIPAddressResourceGroup')]"
+          }
+        }
+      }
+    },
+        
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('networkSecurityGroupName')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'virtual-network')]",
+        "[concat('Microsoft.Resources/deployments/','publicIP')]"
+      ],
+      "properties": {
+        "securityRules": [
+          {
+            "name": "HTTPS_Inbound",
+            "properties": {
+              "description": "HTTPS rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "443",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 1000,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "HTTP_Inbound",
+            "properties": {
+              "description": "HTTP rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 1010,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "SMTP_Inbound",
+            "properties": {
+              "description": "SMTP rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "25",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 1020,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "REST_Inbound",
+            "properties": {
+              "description": "REST rule",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Deny",
+              "priority": 1030,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "SMTP_Outbound",
+            "properties": {
+              "description": "SMTP rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "25",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2000,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "DNS_Outbound",
+            "properties": {
+              "description": "DNS rule",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "53",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2010,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "HTTP_Outbound",
+            "properties": {
+              "description": "HTTP rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2020,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "SSH_Outbound",
+            "properties": {
+              "description": "SSH-Remote Axway Support rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "22",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2030,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "LDAP_Outbound",
+            "properties": {
+              "description": "LDAP rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "389",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2040,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "LDAPS_Outbound",
+            "properties": {
+              "description": "LDAPS rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "636",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2050,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "AD_Outbound",
+            "properties": {
+              "description": "AD rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3268",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2060,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "Secure_AD_Outbound",
+            "properties": {
+              "description": "Secure AD rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "3269",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2070,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "HTTPS_SharePoint_Outbound",
+            "properties": {
+              "description": "SharePoint AD rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "443",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2080,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "SNMP_MIB_Outbound",
+            "properties": {
+              "description": "SNMP MIB Manager rule",
+              "protocol": "Udp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "161",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2090,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "SNMP_TRAP_Outbound",
+            "properties": {
+              "description": "SNMP TRAP Sink rule",
+              "protocol": "Udp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "162",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2100,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "SYSLOG_TCP_Outbound",
+            "properties": {
+              "description": "SYSLOG Serveur TCP rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "601",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2110,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "SYSLOG_UDP_Outbound",
+            "properties": {
+              "description": "SYSLOG Serveur UDP rule",
+              "protocol": "Udp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "514",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2120,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "EXTERNAL_DLP_Outbound",
+            "properties": {
+              "description": "External DLP rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "1344",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2130,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "EXTERNAL_STORAGE_NFS_111_Outbound",
+            "properties": {
+              "description": "External Storage NFS 111 rule",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "111",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2140,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "EXTERNAL_STORAGE_NFS_2049_Outbound",
+            "properties": {
+              "description": "External Storage NFS 2049 rule",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "2049",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2150,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "EXTERNAL_STORAGE_NFS_Outbound",
+            "properties": {
+              "description": "External Storage NFS rule",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "4001-4003",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2160,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "EXTERNAL_STORAGE_CIFS_445_Outbound",
+            "properties": {
+              "description": "External Storage CIFS 445 rule",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "445",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2170,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "EXTERNAL_STORAGE_CIFS_Outbound",
+            "properties": {
+              "description": "External Storage CIFS rule",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "137-139",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2180,
+              "direction": "Outbound"
+            }
+          },
+          {
+            "name": "REST_Outbound",
+            "properties": {
+              "description": "REST rule",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 2190,
+              "direction": "Outbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "name": "[parameters('networkSecurityGroupName_admin')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'virtual-network')]"
+      ],
+      "properties": {
+        "securityRules": [
+          {
+            "name": "HTTPS_Inbound",
+            "properties": {
+              "description": "HTTPS rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "443",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 1000,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "HTTP_Inbound",
+            "properties": {
+              "description": "HTTP rule",
+              "protocol": "Tcp",
+              "sourcePortRange": "*",
+              "destinationPortRange": "80",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 1010,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "REST_Inbound",
+            "properties": {
+              "description": "REST rule",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Deny",
+              "priority": 1020,
+              "direction": "Inbound"
+            }
+          },
+          {
+            "name": "REST_Outbound",
+            "properties": {
+              "description": "REST rule",
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Deny",
+              "priority": 2000,
+              "direction": "Outbound"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('eth_name')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'virtual-network')]",
+        "[concat('Microsoft.Resources/deployments/','publicIP')]",
+        "[concat('Microsoft.Network/networkSecurityGroups/',parameters('networkSecurityGroupName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAddress": "[parameters('subnet1StartAddress')]",
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "[reference('Microsoft.Resources/deployments/virtual-network',variables('templateAPIVersion')).outputs.subnet1Ref.value]"
+              },
+              "PublicIpAddress": {
+                "Id": "[variables('publicIPID')]"
+              }
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[variables('eth_name2')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'virtual-network')]",
+        "[concat('Microsoft.Network/networkSecurityGroups/',parameters('networkSecurityGroupName_admin'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAddress": "[parameters('subnet2StartAddress')]",
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "[reference('Microsoft.Resources/deployments/virtual-network',variables('templateAPIVersion')).outputs.subnet2Ref.value]"
+              }
+
+            }
+          }
+        ],
+        "networkSecurityGroup": {
+          "id": "[resourceId('Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName_admin'))]"
+        }
+      }
+    },
+
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[parameters('vm_name')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/','publicIP')]",
+        "[resourceId('Microsoft.Storage/storageAccounts',variables('storage_name'))]",
+        "[resourceId('Microsoft.Network/networkInterfaces',variables('eth_name'))]",
+        "[resourceId('Microsoft.Network/networkInterfaces',variables('eth_name2'))]"
+      ],
+      "plan": {
+        "name": "[parameters('sku')]",
+        "publisher": "[variables('publisher')]",
+        "product": "[parameters('offer')]"
+      },
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "[parameters('vmSize')]"
+        },
+        "osProfile": {
+          "computername": "[parameters('vm_name')]",
+          "adminUsername": "[parameters('vm_admin')]",
+          "adminPassword": "[parameters('vm_pwd')]",
+          "linuxConfiguration": "[variables('linuxConfiguration')]"
+        },
+
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('publisher')]",
+            "offer": "[parameters('offer')]",
+            "sku": "[parameters('sku')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "name": "[parameters('vm_name')]",
+            "createOption": "FromImage",
+            "caching": "ReadWrite",
+            "vhd": {
+              "uri": "[concat(variables('storage_uri'),'/vhds/',parameters('vm_name'),'.vhd')]"
+
+            }
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('eth_name'))]",
+              "properties": { "primary": true }
+            },
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',variables('eth_name2'))]",
+              "properties": { "primary": false }
+            }
+          ]
+        },
+        "diagnosticsProfile": {
+          "bootDiagnostics": {
+            "enabled": "true",
+            "storageUri": "[variables('storage_uri')]"
+          }
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines/extensions",
+      "name": "[concat(parameters('vm_name'),'/LinuxCustomScriptExtension')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/',parameters('vm_name'))]"
+      ],
+      "properties": {
+        "publisher": "Microsoft.OSTCExtensions",
+        "type": "CustomScriptForLinux",
+        "typeHandlerVersion": "1.4",
+        "settings": {
+          "fileUris": [ "[variables('scriptUrlInit')]" ],
+          "commandToExecute": "[concat('sh init.sh', ' -c ', parameters('company'), ' -f \"', parameters('firstName'), '\" -l \"', parameters('lastName'), '\" -e \"', parameters('email'), '\" -p \"', parameters('businessPhone'), '\" -r \"', parameters('jobRole'), '\" -j \"', parameters('jobFunction'), '\" -o \"', parameters('offer'),'\" -s \"', parameters('sku'),'\" -g \"', parameters('location'), '\"')]"
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "fqdn": {
+      "value": "[reference('publicIP').outputs.fqdn.value]",
+      "type": "string"
+    },
+    "ipaddress": {
+      "value": "[reference('publicIP').outputs.ipaddress.value]",
+      "type": "string"
+    }
+  }
+}
