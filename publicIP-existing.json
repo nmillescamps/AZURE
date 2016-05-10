@@ -34,8 +34,10 @@
     }
   },
   "variables": {
-    "apiVersions": "2016-03-30",
+
+    "apiVersions": "2015-06-15",
     "publicIPID": "[resourceId(parameters('publicIPAddressResourceGroup'),concat('Microsoft.Network','/','publicIPAddresses'),parameters('publicIPAddressName'))]"
+
   },
   "resources": [ ],
   "outputs": {
@@ -43,16 +45,15 @@
       "value": "[variables('publicIPID')]",
       "type": "string"
     },
-    
-     "ipaddress": {
-      "value": "[reference(variables('publicIPID'), variables('apiVersions').network.publicIPAddresses).ipAddress]",
+    "fqdn": {
+
+      "value": "[reference(resourceId(parameters('publicIPAddressResourceGroup'), 'Microsoft.Network/publicIPAddresses/', parameters('publicIPAddressName')), '2015-06-15').dnsSettings.fqdn]",
+
       "type": "string"
     },
-    
-    "fqdn": {
-       "value": "[reference(variables('publicIPID'),variables('apiVersions').network.publicIPAddresses).dnsSettings.fqdn]",
+    "ipaddress": {
+      "value": "[reference(variables('publicIPID'), variables('apiVersions').network.publicIPAddresses).ipAddress]",
       "type": "string"
     }
-   
   }
 }
