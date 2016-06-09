@@ -614,11 +614,11 @@
       "businessPhone": "[steps('customerInformations_step').businessPhone]",
       "jobRole": "[steps('customerInformations_step').jobRole]",
       "jobFunction": "[steps('customerInformations_step').jobFunction]",
-      "billingCountry": "[steps('customerInformations_step').billingCountry",
-      "billingStreet": "[steps('customerInformations_step').billingStreet",
-      "billingCity": "[steps('customerInformations_step').billingCity",
-      "billingStateProvince": "[steps('customerInformations_step').billingStateProvince",
-      "billingZipPostalcode": "[steps('customerInformations_step').billingZipPostalcode",
+      "billingCountry": "[steps('customerInformations_step').billingCountry]",
+      "billingStreet": "[steps('customerInformations_step').billingStreet]",
+      "billingCity": "[steps('customerInformations_step').billingCity]",
+      "billingStateProvince": "[steps('customerInformations_step').billingStateProvince]",
+      "billingZipPostalcode": "[steps('customerInformations_step').billingZipPostalcode]",
 
       "location": "[location()]"
     }
