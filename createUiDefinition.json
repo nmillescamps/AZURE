@@ -555,6 +555,7 @@
                 "type": "Microsoft.Common.TextBox",
                 "label": "Billing State/Province for US/Canada",
                 "toolTip": "Provide your billing state/province (Required for US/Canada)",
+                "defaultValue": "",
                 "constraints": {
                   "regex": "",
                   "validationMessage": "Please provide a valid state/province"
