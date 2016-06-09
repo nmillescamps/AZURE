@@ -553,10 +553,10 @@
               {
                 "name": "billingStateProvince",
                 "type": "Microsoft.Common.TextBox",
-                "label": "Billing State/Province for US/Canada",
-                "toolTip": "Provide your billing state/province (Required for US/Canada)",
-                "defaultValue": "",
+                "label": "Billing State/Province ",
+                "toolTip": "Provide your billing state/province",
                 "constraints": {
+                  "required": true,
                   "regex": "",
                   "validationMessage": "Please provide a valid state/province"
                 }
