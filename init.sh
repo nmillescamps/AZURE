@@ -5,7 +5,7 @@
 FILE_PATH=/etc/azure.txt
 sudo touch $FILE_PATH
 
-while getopts "c:f:l:e:p:r:j:u:v:w:x:y:o:s:g:" opt; do
+while getopts "c:f:l:e:p:r:j:o:s:g:" opt; do
   echo "Option $opt set with value $OPTARG"
   case $opt in
 		c)	COMPANY=$OPTARG
@@ -21,16 +21,6 @@ while getopts "c:f:l:e:p:r:j:u:v:w:x:y:o:s:g:" opt; do
 		r)	JOBROLE=$OPTARG
 		;;
 		j)	JOBFUNCTION=$OPTARG
-		;;
-		u)	BILLINGCOUNTRY=$OPTARG
-		;;
-		v)	BILLINGSTREET=$OPTARG
-		;;
-		w)	BILLINGCITY=$OPTARG
-		;;
-		x)	BILLINGSTATEPROVINCE=$OPTARG
-		;;
-		y)	BILLINGZIPPOSTALCODE=$OPTARG
 		;;
 		o)	OFFER=$OPTARG
 		;;
@@ -54,12 +44,6 @@ echo "EMAIL:"$EMAIL >>$FILE_PATH
 echo "BUSINESSPHONE:"$BUSINESSPHONE >>$FILE_PATH
 echo "JOBROLE:"$JOBROLE >>$FILE_PATH
 echo "JOBFUNCTION:"$JOBFUNCTION >>$FILE_PATH
-echo "BILLINGCOUNTRY:"$BILLINGCOUNTRY >>$FILE_PATH
-echo "BILLINGSTREET:"$BILLINGSTREET >>$FILE_PATH
-echo "BILLINGCITY:"$BILLINGCITY >>$FILE_PATH
-echo "BILLINGSTATEPROVINCE:"$BILLINGSTATEPROVINCE >>$FILE_PATH
-echo "BILLINGZIPPOSTALCODE:"$BILLINGZIPPOSTALCODE >>$FILE_PATH
-
 echo "OFFER:"$OFFER >>$FILE_PATH
 echo "SKU:"$SKU >>$FILE_PATH
 echo "LOCATION:"$LOCATION >>$FILE_PATH
