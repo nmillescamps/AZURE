@@ -340,7 +340,7 @@
                 "toolTip": "Provide your company name.",
                 "constraints": {
                   "required": true,
-                  "regex": "",
+                  "regex": "^[a-zA-Z0-9]{1,30}$",
                   "validationMessage": ""
                 }
               },
