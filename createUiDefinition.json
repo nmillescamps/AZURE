@@ -339,9 +339,9 @@
                 "label": "Company name",
                 "toolTip": "Provide your company name.",
                 "constraints": {
+                  "regex": "^[a-zA-Z0-9*\\s]{1,30}$",
                   "required": true,
-                  "regex": "^[a-zA-Z0-9]{1,30}$",
-                  "validationMessage": ""
+                  "validationMessage": "Please provide a valide company name without accent, special characters etc..."
                 }
               },
               {
@@ -351,8 +351,8 @@
                 "toolTip": "Provide your first name.",
                 "constraints": {
                   "required": true,
-                  "regex": "",
-                  "validationMessage": ""
+                  "regex": "^[a-zA-Z0-9*\\s]{1,30}$",
+                  "validationMessage": "Please provide a valide first name without accent, special characters etc..."
                 }
               },
               {
@@ -362,8 +362,8 @@
                 "toolTip": "Provide your last name.",
                 "constraints": {
                   "required": true,
-                  "regex": "",
-                  "validationMessage": ""
+                  "regex": "^[a-zA-Z0-9*\\s]{1,30}$",
+                  "validationMessage": "Please provide a valide last name without accent, special characters etc..."
                 }
               },
               {
@@ -401,11 +401,11 @@
                     },
                     {
                       "label": "Analyst (Industry/Finance)",
-                      "value": "Analyst (Industry/Finance)"
+                      "value": "Analyst Industry Finance"
                     },
                     {
                       "label": "Analyst (Technical)",
-                      "value": "Analyst (Technical)"
+                      "value": "Analyst Technical"
                     },
                     {
                       "label": "Architect",
@@ -464,15 +464,15 @@
                   "allowedValues": [
                     {
                       "label": "Analytics / Business Intelligence",
-                      "value": "Analytics / Business Intelligence"
+                      "value": "Analytics  Business Intelligence"
                     },
                     {
                       "label": "Big Data / Architecture",
-                      "value": "Big Data / Architecture"
+                      "value": "Big Data  Architecture"
                     },
                     {
                       "label": "Data Warehouse / Management",
-                      "value": "Data Warehouse / Management"
+                      "value": "Data Warehouse  Management"
                     },
                     {
                       "label": "Data Science",
@@ -484,7 +484,7 @@
                     },
                     {
                       "label": "ETL / ELT",
-                      "value": "ETL / ELT"
+                      "value": "ETL  ELT"
                     },
                     {
                       "label": "Infrastructure",
@@ -496,7 +496,7 @@
                     },
                     {
                       "label": "Marketing / Sales",
-                      "value": "Marketing / Sales"
+                      "value": "Marketing  Sales"
                     },
                     {
                       "label": "Networking",
@@ -508,7 +508,7 @@
                     },
                     {
                       "label": "Security / Compliance",
-                      "value": "Security / Compliance"
+                      "value": "Security  Compliance"
                     },
                     {
                       "label": "Storage",
@@ -524,8 +524,8 @@
                 "toolTip": "Provide your billing country",
                 "constraints": {
                   "required": true,
-                  "regex": "",
-                  "validationMessage": "Please provide a valid country"
+                  "regex": "^[a-zA-Z0-9*\\s]{1,30}$",
+                  "validationMessage": "Please provide a valide country without accent, special characters etc..."
                 }
               },
               {
@@ -535,8 +535,8 @@
                 "toolTip": "Provide your billing street",
                 "constraints": {
                   "required": true,
-                  "regex": "",
-                  "validationMessage": "Please provide a valid street"
+                  "regex": "^[a-zA-Z0-9*\\s]{1,30}$",
+                  "validationMessage": "Please provide a valid street without accent, special characters etc..."
                 }
               },
               {
@@ -546,8 +546,8 @@
                 "toolTip": "Provide your billing City",
                 "constraints": {
                   "required": true,
-                  "regex": "",
-                  "validationMessage": "Please provide a valid city"
+                  "regex": "^[a-zA-Z0-9*\\s]{1,30}$",
+                  "validationMessage": "Please provide a valid city without accent, special characters etc..."
                 }
               },
               {
@@ -557,8 +557,8 @@
                 "toolTip": "Provide your billing state/province",
                 "constraints": {
                   "required": true,
-                  "regex": "",
-                  "validationMessage": "Please provide a valid state/province"
+                  "regex": "^[a-zA-Z0-9*\\s]{1,30}$",
+                  "validationMessage": "Please provide a valid state/province without accent, special characters etc..."
                 }
               },
               {
@@ -568,8 +568,8 @@
                 "toolTip": "Provide your billing zip/postal code",
                 "constraints": {
                   "required": true,
-                  "regex": "",
-                  "validationMessage": "Please provide a valid zip/postal code"
+                  "regex": "^[a-zA-Z0-9*\\s]{1,30}$",
+                  "validationMessage": "Please provide a valid zip/postal code without accent, special characters etc..."
                 }
               }
             ]
